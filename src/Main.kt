@@ -30,7 +30,7 @@ fun attack(degatAttack:Int,attaquant:String,victim:String,pvVictim:Int,defVictim
     if (pv<0){
         pv=0
     }
-    println("$attaquant attaque $victim et lui fait $dammage degats. il reste $pv a $victim")
+    println("$attaquant attaque $victim et lui fait $dammage degats. il reste $pv pv  a $victim")
 }
 
 fun boirepotion(nomPerso:String,pv:Int,pvMax:Int,statPot:Int){
@@ -121,10 +121,68 @@ fun choisirItem(nomPerso: String,inventaire: MutableList<String>){
     println("$reponse ...c'est un choix intérressant")
 }
 
-tourJouer()
+fun tourJouer(
+    inventaire: MutableList<String>, defVictim: Int, pvVictim: Int, victim: String, nomPerso: String, attack: Int, actions: MutableList<String>, zomie: Boolean, pvMax: Int) {
+    println("choisissez une action parmis les suivantes ")
+    for (i in actions.indices) {
+        print("$i : ")
+        println(actions[i])
+    }
+    val reponse = readln().toInt()
+    var bonneRep = 0
+    while (bonneRep < 1) {
+
+        if (reponse.toInt() == 0) {
+            attack(10000, nomPerso, victim, pvVictim, defVictim)
+            bonneRep = 1
+        } else if (reponse.toInt() == 1) {
+            katon(nomPerso, victim, attack, defVictim, pvVictim)
+            bonneRep = 1
+        } else if (reponse.toInt() == 2) {
+            missilMagic(nomPerso, victim, attack, defVictim, pvVictim)
+            bonneRep = 1
+        } else if (reponse.toInt() == 3) {
+            heal(nomPerso, victim, attack, pvVictim, pvMax, zomie)
+            bonneRep = 1
+        } else if (reponse.toInt() == 4) {
+            choisirItem(nomPerso, inventaire)
+            bonneRep = 1
+        } else {
+            println("choisissez une action parmis les suivantes ")
+            for (i in actions.indices) {
+                print("$i : ")
+                println(actions[i])
+            }
+            val reponse = readln().toInt()
+
+        }
 
 
+    }
 
+}
+
+fun tourOrdinateur(nomPerso: String, victim: String, pvVictim: Int, pvMax: Int, zomie: Boolean, defVictim: Int, attack: Int) {
+    var res = lanceDes(1, 30)
+    if (res < 15) {
+        attack(10000, nomPerso, victim, pvVictim, defVictim)
+
+    } else if (res > 20) {
+        katon(nomPerso, victim, attack, defVictim, pvVictim)
+
+    } else if (res < 25) {
+        missilMagic(nomPerso, victim, attack, defVictim, pvVictim)
+
+    } else if (res <= 30) {
+        heal(nomPerso, victim, attack, pvVictim, pvMax, zomie)
+    }
+}
+fun tourCombat(nomPerso1: String, victim1: String, nomPerso: String, victim: String, defVictim: Int,attack: Int, defPerso: Int, zombie: Boolean, pvMax: Int, pvMax1: Int, actions: MutableList<String>, inventaire: MutableList<String>, pvVictim: Int) {
+    println("debut tour")
+    tourJouer(inventaire, defVictim, pvVictim, victim, nomPerso, 10000, actions, zombie, pvMax)
+    tourOrdinateur(nomPerso1, victim1, pvVictim, pvMax1, zombie, defPerso, attack)
+    println("fin du tour")
+}
 fun main() {
     //println(lanceDes(6,6))
     //println(calculDegat(4,6,5,4,8))
@@ -136,6 +194,7 @@ fun main() {
     //heal("lucio","rein",100,500,800,false)
     //afficherInventaire("tarnished", mutableListOf("potion vie","potion de mana","torrent","runes"))
     //choisirItem("tarnished", mutableListOf("potion vie","potion de mana","torrent","runes"))
-
+    //tourJouer(mutableListOf("potion vie","potion de mana","torrent","runes"),140,500,"malenia","tarnished",1000,mutableListOf("attack","katon","missile","heal","item"),false,800)
+    //tourOrdinateur("malenia", "tarnished", 150, 150, false, 50, 1500)
 
 }
